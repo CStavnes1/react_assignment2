@@ -22,8 +22,9 @@ class NyTimesContainer extends Component {
   searchArticles = query => {
     API.search(query)
       .then(res => {
-        this.setState({ results: res.data.response.docs })
         console.log(res.data)
+        this.setState({ results: res.data })
+        
       })
 
 
