@@ -7,26 +7,37 @@ import SearchForm from "./SearchForm";
 import ArticleDetail from "./ArticleDetail";
 import API from "../utils/API";
 
+
+
 class NyTimesContainer extends Component {
   state = {
-    result: {},
+    results: [],
     search: ""
   };
-
   // When this component mounts, search yankees"
   componentDidMount() {
-    this.searchArticles("Yankees");
+    this.searchArticles("Twins");
   }
 
   searchArticles = query => {
     API.search(query)
-      .then(function(response) {
-        console.log(response)
+      .then(res => {
+        this.setState({ results: res.data.response.docs })
+        console.log(res.data)
       })
-        
-      //   res => this.setState({ result: res.data }))
-      // .catch(err => console.log(err));
+
+
+
+    //   function(result) {
+    //   console.log(result)
+    //   this.setState({result: result.data})
+    //   console.log(result.data)
+    // })
+
+    //   res => this.setState({ result: res.data }))
+    // .catch(err => console.log(err));
   };
+
 
   handleInputChange = event => {
     const value = event.target.value;
@@ -48,19 +59,16 @@ class NyTimesContainer extends Component {
       <Container>
         <Row>
           <Col size="md-8">
-            <Card
-              heading={this.state.result.Title || "Search for a Article"}
-            >
-              {this.state.result.Title ? (
-                <ArticleDetail
-                  title={this.state.result.Title}
-                  date={this.state.result.date}
-                  url={this.state.result.url}
-                />
-              ) : (
-                <h3>No Results to Display</h3>
-              )}
-            </Card>
+
+            {this.state.results.map(result => (
+            <Card key={result._id}>
+              <ArticleDetail
+                title={result.headline.main}
+                date={result.pub_date}
+                url={result.web_url}
+              />
+            </Card>))}
+
           </Col>
           <Col size="md-4">
             <Card heading="Search">
